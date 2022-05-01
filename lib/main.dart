@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_curso/pages/page2.dart';
 
 void main() => runApp(MyApp());
 
@@ -26,29 +25,42 @@ class Inicio extends StatefulWidget {
   @override
   State<Inicio> createState() => _InicioState();
 }
+ bool _subscrito=false;
 
 class _InicioState extends State<Inicio> {
+
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
   
         appBar: AppBar(
-          title: Text("Navigation"),
+          title: Text("Alert Dialog"),
         ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Home"),
               RaisedButton(
-                child: Text("Ir a la otra pagina"),
-                onPressed: ()=>{
-                  // Llamar otra pagina
-                  Navigator.push(
-                    context, 
-                    MaterialPageRoute(builder: (context)=>page2())
-                  ),
-                }
+                color: Color(0xffff0000),
+                textColor: Colors.white,
+
+                child: Text(_subscrito?"Dejar de seguir":"Suscribirme", 
+                  style: TextStyle(
+                    fontSize: 20, 
+                    fontWeight: FontWeight.bold
+                    ), 
+                ),
+
+                onPressed: (){
+                  String msg=_subscrito?"¿Estas seguro que quieres dejar de seguir este canal?":"¿Estas seguro que quieres suscribirte a este canal?";
+                    _showAlert(context, _subscrito?"Cancelar subcripción":"Suscribirse", msg);      
+                },               
+              ),
+              SizedBox(height: 50,),
+              Text(
+                _subscrito?"Subscrito":"No subscrito",
+                style: TextStyle(fontSize: 20),
               )
             ],
           ),
@@ -56,5 +68,36 @@ class _InicioState extends State<Inicio> {
     );
 
   }
+
+void _showAlert(BuildContext context, String title, String message){
+  showDialog(
+    context: context,
+    barrierDismissible: false, //Para no se cierre al darle click afuera
+    builder:(_) => new AlertDialog(
+      title: Text(title),
+      content: Text(message),
+      actions: [
+        TextButton(
+          child: Text(("Cancelar")),
+          onPressed: (){
+            print("Cancelar");
+            Navigator.pop(context);
+          }, 
+        ),
+        TextButton(
+          child: Text(("Aceptar")),
+          onPressed: (){
+            print("Si, acepto");
+             setState(() {
+              _subscrito=!_subscrito;
+            });
+            Navigator.pop(context);
+          }, 
+        ),
+      ],
+    )
+    );
+}
+
 }
 
