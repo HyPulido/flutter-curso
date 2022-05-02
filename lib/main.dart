@@ -2,102 +2,124 @@ import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  List<Persona> _personas=[
+    Persona("Holman", "Pulido", "3135855289"),
+    Persona("Yesid", "Castañeda", "3135755289"),   
+    Persona("Marcos", "Figueroa", "3135855289"),
+    Persona("Juan", "Peña", "3135755289"),    
+    Persona("Maria", "Pulido", "3135855289"),
+    Persona("Jose", "Garcia", "3135755289"),    
+    // Persona("Holman", "Pulido", "3135855289"),
+    // Persona("Yesid", "Castañeda", "3135755289"),   
+    // Persona("Marcos", "Figueroa", "3135855289"),
+    // Persona("Juan", "Peña", "3135755289"),    
+    // Persona("Maria", "Pulido", "3135855289"),
+    // Persona("Jose", "Garcia", "3135755289"),   
+    // Persona("Holman", "Pulido", "3135855289"),
+    // Persona("Yesid", "Castañeda", "3135755289"),   
+    // Persona("Marcos", "Figueroa", "3135855289"),
+    // Persona("Juan", "Peña", "3135755289"),    
+    // Persona("Maria", "Pulido", "3135855289"),
+    // Persona("Jose", "Garcia", "3135755289"),    
+    // Persona("Holman", "Pulido", "3135855289"),
+    // Persona("Yesid", "Castañeda", "3135755289"),   
+    // Persona("Marcos", "Figueroa", "3135855289"),
+    // Persona("Juan", "Peña", "3135755289"),    
+    // Persona("Maria", "Pulido", "3135855289"),
+    // Persona("Jose", "Garcia", "3135755289"),   
+    // Persona("Holman", "Pulido", "3135855289"),
+    // Persona("Yesid", "Castañeda", "3135755289"),   
+    // Persona("Marcos", "Figueroa", "3135855289"),
+    // Persona("Juan", "Peña", "3135755289"),    
+    // Persona("Maria", "Pulido", "3135855289"),
+    // Persona("Jose", "Garcia", "3135755289"),    
+    // Persona("Holman", "Pulido", "3135855289"),
+    // Persona("Yesid", "Castañeda", "3135755289"),   
+    // Persona("Marcos", "Figueroa", "3135855289"),
+    // Persona("Juan", "Peña", "3135755289"),    
+    // Persona("Maria", "Pulido", "3135855289"),
+    // Persona("Jose", "Garcia", "3135755289"),   
+  ];  
+
+  @override
   Widget build(BuildContext context) {
+    BuildContext ctx=context;
     return MaterialApp(
-      title: "MyApp",
-      theme: ThemeData(primarySwatch: Colors.red),
-      // theme: ThemeData(
-      //   primaryColor: Colors.red,
-      //   visualDensity: VisualDensity.adaptivePlatformDensity
-      // ),
-      home: Inicio(),
-    );
-  }
-}
-
-class Inicio extends StatefulWidget {
-  Inicio({Key? key}) : super(key: key);
-
-  @override
-  State<Inicio> createState() => _InicioState();
-}
- bool _subscrito=false;
-
-class _InicioState extends State<Inicio> {
-
- 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-  
+      title: 'Material App',
+      home: Scaffold(
         appBar: AppBar(
-          title: Text("Alert Dialog"),
+          title: Text('Material App Bar 2'),
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              RaisedButton(
-                color: Color(0xffff0000),
-                textColor: Colors.white,
-
-                child: Text(_subscrito?"Dejar de seguir":"Suscribirme", 
-                  style: TextStyle(
-                    fontSize: 20, 
-                    fontWeight: FontWeight.bold
-                    ), 
-                ),
-
-                onPressed: (){
-                  String msg=_subscrito?"¿Estas seguro que quieres dejar de seguir este canal?":"¿Estas seguro que quieres suscribirte a este canal?";
-                    _showAlert(context, _subscrito?"Cancelar subcripción":"Suscribirse", msg);      
-                },               
+        body: ListView.builder(
+          itemCount: _personas.length,
+          itemBuilder: (context, index) {
+            // return Text(_personas[index].first_name);
+            return ListTile(
+               onLongPress: (){
+                // print(_personas[index].phone);
+                this._deletePerson(context, _personas[index]);
+              },
+              onTap: (){
+                print(_personas[index].first_name+" "+_personas[index].last_name);
+              },
+              title: Text(_personas[index].first_name+" "+_personas[index].last_name),
+              subtitle: Text(_personas[index].phone),
+              leading: CircleAvatar(
+                child:Text(_personas[index].first_name.substring(0,1))
               ),
-              SizedBox(height: 50,),
-              Text(
-                _subscrito?"Subscrito":"No subscrito",
-                style: TextStyle(fontSize: 20),
-              )
-            ],
-          ),
+              trailing: Icon(Icons.arrow_forward_ios),
+            );
+          },
         )
+      )
     );
-
   }
 
-void _showAlert(BuildContext context, String title, String message){
-  showDialog(
-    context: context,
-    barrierDismissible: false, //Para no se cierre al darle click afuera
-    builder:(_) => new AlertDialog(
-      title: Text(title),
-      content: Text(message),
-      actions: [
-        TextButton(
-          child: Text(("Cancelar")),
-          onPressed: (){
-            print("Cancelar");
+  void _deletePerson(context, Persona person){
+    showDialog(
+      context: context,
+      builder: ( _ ) => AlertDialog(
+        title: Text("Eliminar contacto"),
+        content: Text("¿Estas seguro de eliminar a "+person.first_name +" "+person.last_name+"?"),
+        actions: [
+          TextButton(onPressed: (){
             Navigator.pop(context);
-          }, 
-        ),
-        TextButton(
-          child: Text(("Aceptar")),
-          onPressed: (){
-            print("Si, acepto");
-             setState(() {
-              _subscrito=!_subscrito;
+           
+          }, child: Text("Cancelar")),
+          TextButton(onPressed: (){
+            print(person.first_name);
+            
+            this.setState(() {
+              this._personas.remove(person);
             });
             Navigator.pop(context);
-          }, 
-        ),
-      ],
-    )
+          }, child: Text("Borrar", style: TextStyle(color: Colors.red),)),
+        ],
+      ) 
     );
+
+  }
 }
 
-}
 
+class Persona{
+  String first_name="";
+  String last_name="";
+  String phone="";
+
+  Persona(String first_name, String last_name, String phone){
+    this.first_name=first_name;
+    this.last_name=last_name;
+    this.phone=phone;
+  }
+
+}
